@@ -48,7 +48,7 @@ class ReservaController extends ActiveController
             ],
         ];
 
-        // token
+        // token y api-key
 
         // Configuración del autenticador (cambia a HttpBearerAuth)
         $behaviors['authenticator'] = [
@@ -68,7 +68,14 @@ class ReservaController extends ActiveController
         // Configuración del VerbFilter (CORRECTO)
         $behaviors['verbFilter'] = [
             'class' => VerbFilter::class,
-            'actions' => $this->verbs(),
+            'actions' => [
+                'index' => ['GET', 'HEAD'],
+                'view' => ['GET', 'HEAD'],
+                'create' => ['POST', 'OPTIONS'], // Asegúrate que POST está permitido
+                'update' => ['PUT', 'PATCH', 'OPTIONS'],
+                'delete' => ['DELETE', 'OPTIONS'],
+                // 'generate-api-key' => ['GET', 'OPTIONS'], // Permitir GET para generar claves
+            ],
         ];
 
         return $behaviors;
@@ -136,17 +143,7 @@ class ReservaController extends ActiveController
         return $result;
     }
 
-    public function verbs()
-    {
-        return [
-            'index' => ['GET', 'HEAD'],
-            'view' => ['GET', 'HEAD'],
-            'create' => ['POST', 'OPTIONS'], // Asegúrate que POST está permitido
-            'update' => ['PUT', 'PATCH', 'OPTIONS'],
-            'delete' => ['DELETE', 'OPTIONS'],
-            // 'generate-api-key' => ['GET', 'OPTIONS'], // Permitir GET para generar claves
-        ];
-    }
+
 
     // Esta acción debe llamarse actionCreate (no create)
     public function actionCreate()
